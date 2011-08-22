@@ -184,17 +184,21 @@
 (make-handler (write-entry)
   (standard-page (:title "Write a New Entry")
     (:h1 "The Little Blogger")
-    (:form :action "/save-entry" :method "post"
-           (:p (:label "Title" (:br)
-                       (:input :type "text"
-                               :name "title")))
-           (:p (:label "Slug" (:br)
-                       (:input :type "text"
-                               :name "slug")))
-           (:p (:label "Body" (:br)
-                       (:textarea :name "body")))
-           (:p (:input :type "submit"
-                       :value "Save")))))
+    (:div :id "content"
+          (:form :action "/save-entry" :method "post"
+                 (:p (:label "Title" (:br)
+                             (:input :type "text"
+                                     :name "title"
+                                     :autofocus t)))
+                 (:p (:label "Slug" (:br)
+                             (:input :type "text"
+                                     :name "slug")))
+                 (:p (:label "Body" (:br)
+                             (:textarea :name "body")))
+                 (:p (:input :type "submit"
+                             :value "Save")
+                     " or "
+                     (:a :href "/index" "Cancel"))))))
 
 (make-handler (save-entry)
   (let ((title (parameter "title"))
@@ -225,6 +229,12 @@
       :font-weight "normal"))
     (("ol, ul, p+p")
      (:margin "1em 0"))
+    (("input, textarea")
+     (:font "inherit"))
+    (("input[type='text'], textarea")
+     (:width "100%"))
+    (("textarea")
+     (:height "20em"))
     (("#content")
      (:width "40em"))
     (("#content h2 a")
