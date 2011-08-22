@@ -139,14 +139,11 @@
 
 (make-handler (index)
   (standard-page (:title "The Little Blogger")
-    (:p (:a :href "/write-entry" "Write a New Entry"))
+    (:p (:a :href "/entry" "Write a New Entry"))
     (:div :id "content"
           (dolist (entry (entries))
             (htm
              (:div (fmt (entry-html entry))))))))
-
-;; Also use "/" for the index
-;;;  (push (create-prefix-dispatcher "/" 'index) *dispatch-table*)
 
 (make-handler (entries)
   (let ((entry (entry-from-url (script-name *request*))))
@@ -154,7 +151,12 @@
       (:div :id "content"
             (fmt (entry-html entry :link-header nil))))))
 
-(make-handler (write-entry)
+(make-handler (entry)
+  (if (eq (request-method*) :GET)
+      (show-new-entry-form)
+      (create-new-entry)))
+
+(defun show-new-entry-form ()
   (standard-page (:title "Write a New Entry")
     (:div :id "content"
           (:form :action "/save-entry" :method "post"
@@ -172,7 +174,7 @@
                      " or "
                      (:a :href "/index" "Cancel"))))))
 
-(make-handler (save-entry)
+(defun create-new-entry ()
   (let ((title (parameter "title"))
         (slug (parameter "slug"))
         (body (parameter "body")))
