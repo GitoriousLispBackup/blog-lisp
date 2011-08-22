@@ -113,16 +113,9 @@
                     :href "/style")
              (:title ,title))
             (:body
+             (:h1
+              (:a :href "/index" "The Little Blogger"))
              ,@body))))
-
-;; (defmacro make-handler ((name) &body body)
-;;   `(progn
-;;      (defun ,name ()
-;;        ,@body)
-;;      (push (create-prefix-dispatcher
-;;             ,(format nil "/~(~a~)" name)
-;;             ',name)
-;;            *dispatch-table*)))
 
 (defmacro make-handler ((name) &body body)
   `(push (create-prefix-dispatcher
@@ -146,7 +139,6 @@
 
 (make-handler (index)
   (standard-page (:title "The Little Blogger")
-    (:h1 "The Little Blogger")
     (:p (:a :href "/write-entry" "Write a New Entry"))
     (:div :id "content"
           (dolist (entry (entries))
@@ -159,13 +151,11 @@
 (make-handler (entries)
   (let ((entry (entry-from-url (script-name *request*))))
     (standard-page (:title (fmt (entry-title entry)))
-      (:h1 "The Little Blogger")
       (:div :id "content"
             (fmt (entry-html entry :link-header nil))))))
 
 (make-handler (write-entry)
   (standard-page (:title "Write a New Entry")
-    (:h1 "The Little Blogger")
     (:div :id "content"
           (:form :action "/save-entry" :method "post"
                  (:p (:label "Title" (:br)
@@ -195,32 +185,37 @@
     (("h1, h2, h3, div, p, ol, ul, li")
      (:margin 0 :padding 0))
     (("body")
-     (:font-family "\"Nimbus Sans L\", \"Liberation Sans\", \"Helvetica\", \"Arial\", sans-serif"
-      :font-size "0.9em"
+     (:color "#222"
+      :font-family "\"DejaVu Sans\", sans-serif"
+      :font-size "1em"
       :line-height "1.5em"
       :padding "2em"))
+    (("a")
+     (:color "#2F51A9"
+      :text-decoration "none"))
+    (("a:hover")
+     (:text-decoration "underline"))
     (("h1, h2")
-     (:font-family "\"Nimbus Roman No9 L\", \"Liberation Serif\", \"Times New Roman\", serif"))
+     (:font-weight "normal"))
     (("h1")
      (:margin-bottom "0.5em"))
     (("h2")
-     (:margin-top "1em"))
+     (:margin-top "1em"
+      :margin-bottom "0.2em"))
     (("h3")
-     (:color "steelblue"
-      :font-size "0.8em"
-      :font-weight "normal"))
-    (("ol, ul, p+p")
+     (:color "#777"
+      :font-size "0.8em"))
+    (("ol, ul, p+p, li>p")
      (:margin "1em 0"))
     (("input, textarea")
      (:font "inherit"))
     (("input[type='text'], textarea")
-     (:width "100%"))
+     (:border "1px solid #000"
+      :width "100%"))
     (("textarea")
      (:height "20em"))
     (("#content")
-     (:width "40em"))
-    (("#content h2 a")
-     (:color "black"))))
+     (:width "40em"))))
 
 ;;;; Web Server
 
