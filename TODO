@@ -18,3 +18,9 @@ TODO
   you know the URL without posting it to the index page (and RSS feed,
   when that's added). That way I could send the link to other people
   to have them review it before it's done.
+
+- Add support for photos
+
+- Don't allow multiple entries with the same slug
+
+- Add error checking for creating a new entry
