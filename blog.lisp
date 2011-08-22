@@ -2,24 +2,6 @@
 ;;;
 ;;; This is a simple blog I wrote in Common Lisp. It's friggin'
 ;;; awesome.
-;;;
-;;; TODO:
-;;;
-;;; - make-handler should replace existing handler if it exists
-;;;   instead of always adding to the front of the list
-;;;
-;;; - Figure out how to show the index at / without clobbering the
-;;;   other dispatch routes
-;;;
-;;; - Add docstrings where appropriate
-;;;
-;;; - Clean up the write page
-;;;
-;;; - Add pagination (I'll probably have enough posts soon)
-;;;
-;;; - Add an RSS feed (maybe?)
-;;;
-;;; - Add authentication to the write pages
 
 (defpackage :blog
   (:use :common-lisp :hunchentoot :cl-who :css-lite :split-sequence))

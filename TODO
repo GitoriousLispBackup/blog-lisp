@@ -1,0 +1,20 @@
+TODO
+
+- make-handler should replace existing handler if it exists
+  instead of always adding to the front of the list
+
+- Figure out how to show the index at / without clobbering the
+  other dispatch routes
+
+- Add docstrings where appropriate
+
+- Add pagination (I'll probably have enough entries soon)
+
+- Add an RSS feed (maybe?)
+
+- Add authentication to the write pages
+
+- Add a way to save entry drafts. Maybe make them available by URL if
+  you know the URL without posting it to the index page (and RSS feed,
+  when that's added). That way I could send the link to other people
+  to have them review it before it's done.
