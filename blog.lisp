@@ -45,6 +45,11 @@
     (push (make-instance 'blog-entry :slug slug :title title :body body)
           *entries*)))
 
+(defun update-entry (entry slug title body)
+  (setf (slot-value entry 'slug) slug)
+  (setf (slot-value entry 'title) title)
+  (setf (slot-value entry 'body) body))
+
 ;;;; Persistence
 
 (defmethod print-object ((entry blog-entry) stream)
@@ -149,36 +154,51 @@
   (let ((entry (entry-from-url (script-name *request*))))
     (standard-page (:title (fmt (entry-title entry)))
       (:div :id "content"
-            (fmt (entry-html entry :link-header nil))))))
+            (fmt (entry-html entry :link-header nil)))
+      (:p (:a :href (concatenate 'string "/entry/" (entry-slug entry))
+              "Edit This Entry")))))
 
 (make-handler (entry)
-  (if (eq (request-method*) :GET)
-      (show-new-entry-form)
-      (create-new-entry)))
+  (let* ((url (script-name *request*))
+         (entry (entry-from-url url)))
+    (if (eq (request-method*) :GET)
+        (show-entry-form entry)
+        (create-or-update-entry (slug-from-url url)))))
 
-(defun show-new-entry-form ()
-  (standard-page (:title "Write a New Entry")
-    (:div :id "content"
-          (:form :action "/save-entry" :method "post"
-                 (:p (:label "Title" (:br)
-                             (:input :type "text"
-                                     :name "title"
-                                     :autofocus t)))
-                 (:p (:label "Slug" (:br)
-                             (:input :type "text"
-                                     :name "slug")))
-                 (:p (:label "Body" (:br)
-                             (:textarea :name "body")))
-                 (:p (:input :type "submit"
-                             :value "Save")
-                     " or "
-                     (:a :href "/index" "Cancel"))))))
+(defun show-entry-form (entry)
+  (let* ((e (or entry (make-instance 'blog-entry :slug "" :title "" :body "")))
+         (post-url (concatenate 'string "/entry/" (entry-slug e)))
+         (page-title (if entry
+                         (concatenate 'string "Edit Entry: " (entry-title entry))
+                         "Write a New Entry")))
+    (standard-page (:title (str page-title))
+      (:div :id "content"
+            (:form :action post-url :method "post"
+                   (:p (:label "Title" (:br)
+                               (:input :type "text"
+                                       :name "title"
+                                       :value (entry-title e)
+                                       :autofocus t)))
+                   (:p (:label "Slug" (:br)
+                               (:input :type "text"
+                                       :name "slug"
+                                       :value (entry-slug e))))
+                   (:p (:label "Body" (:br)
+                               (:textarea :name "body"
+                                          (str (entry-body e)))))
+                   (:p (:input :type "submit"
+                               :value "Save")
+                       " or "
+                       (:a :href "/index" "Cancel")))))))
 
-(defun create-new-entry ()
+(defun create-or-update-entry (slug-or-nil)
   (let ((title (parameter "title"))
         (slug (parameter "slug"))
-        (body (parameter "body")))
-    (add-entry slug title body)
+        (body (parameter "body"))
+        (entry (entry-from-slug slug-or-nil)))
+    (if entry
+        (update-entry entry slug title body)
+        (add-entry slug title body))
     (redirect "/index")))
 
 (make-handler (style)
