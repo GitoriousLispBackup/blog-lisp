@@ -27,7 +27,10 @@ or send me a pull request.
 
 * License
 
-Copyright (c) 2011 Tom Small
+Favicon is copyright Mark James and licensed under a Creative Commons
+Attribution 2.5 License. http://www.famfamfam.com/lab/icons/silk/
+
+Blog code is Copyright (c) 2011 Tom Small
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

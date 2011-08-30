@@ -131,6 +131,9 @@
                     :content    "text/html;charset=utf-8")
              (:link :rel  "stylesheet"
                     :href "/style")
+             (:link :rel "icon"
+                    :href "/favicon"
+                    :type "image/png")
              (:title ,title))
             (:body
              (:h1
@@ -253,6 +256,9 @@
      (:height "20em"))
     (("#content")
      (:width "40em"))))
+
+(push (create-static-file-dispatcher-and-handler "/favicon" "favicon.png" "image/png")
+      *dispatch-table*)
 
 ;;;; Web Server
 
